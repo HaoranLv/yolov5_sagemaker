@@ -1,5 +1,3 @@
-ENV PYTHONUNBUFFERED=TRUE
-ENV PYTHONDONTWRITEBYTECODE=TRUE
 ARG BASE_IMG=pytorch/pytorch:1.8.1-cuda11.1-cudnn8-devel
 
 FROM ${BASE_IMG} 
@@ -14,7 +12,7 @@ RUN ldconfig -v
 RUN pip install tensorboard torch torchvision --upgrade
 
 RUN apt-get install -y git
-RUN cd /opt && git clone https://github.com/ultralytics/yolov5
+RUN cd /opt && git clone git://github.com/ultralytics/yolov5
 RUN pip install -r /opt/yolov5/requirements.txt
 
 RUN apt-get install ffmpeg libsm6 libxext6 -y
@@ -36,7 +34,9 @@ ENV PATH="/opt/yolov5:${PATH}"
 WORKDIR /opt/ml/code
 COPY train /opt/ml/code
 COPY predict /opt/ml/code
-COPY serve /opt/ml/code
+COPY serve.py /opt/ml/code
 COPY wsgi.py /opt/ml/code
 COPY predictor.py /opt/ml/code
 COPY nginx.conf /opt/ml/code
+COPY best.pt /opt/ml/code
+ENTRYPOINT ["python", "serve.py"]

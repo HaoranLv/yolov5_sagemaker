@@ -27,10 +27,11 @@ else
     registry_uri="${registry_id}.dkr.ecr.${region}.amazonaws.com"
 fi
 
-if [ $? -ne 0 ]
-then
-    aws ecr create-repository --repository-name "${image}" > /dev/null
-fi
+# if [ $? -ne 0 ]
+# then
+#     aws ecr create-repository --repository-name "${image}" > /dev/null
+# fi
+aws ecr create-repository --repository-name "${image}" > /dev/null
 
 $(aws ecr get-login --region ${region} --no-include-email)
 $(aws ecr get-login --registry-ids ${registry_id} --region ${region} --no-include-email)
