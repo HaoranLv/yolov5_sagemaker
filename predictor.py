@@ -36,7 +36,7 @@ app = flask.Flask(__name__)
 s3_client = boto3.client('s3')
 
 name = 'tutorial'
-weights = '/opt/ml/code/bestv1.pt'
+weights = '/opt/ml/code/best.pt'
 imgsz = 1600
 conf_thres = 0.2
 iou_thres = 0.1
