@@ -21,7 +21,7 @@ def parse_arguments():
         "--endpoint_ecr_image_path",
         type=str,
         help=" ",
-        default="015708445809.dkr.ecr.cn-north-1.amazonaws.com.cn/yolov"
+        default="015708445809.dkr.ecr.cn-north-1.amazonaws.com.cn/yolov5"
     )
     parser.add_argument(
         "-en",
@@ -29,7 +29,7 @@ def parse_arguments():
         type=str,
         nargs="?",
         help="When set, this argument ",
-        default="yolov"
+        default="yolov5"
     )
     parser.add_argument(
         "-i",
