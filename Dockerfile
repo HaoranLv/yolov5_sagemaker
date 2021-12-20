@@ -40,6 +40,7 @@ COPY wsgi.py /opt/ml/code
 COPY predictor.py /opt/ml/code
 COPY predictor_local.py /opt/ml/code
 COPY nginx.conf /opt/ml/code
+COPY serve /opt/ml/code
 #直接部署
 # COPY best.pt /opt/ml/code 
 # ENTRYPOINT ["python", "serve.py"] 
