@@ -12,13 +12,14 @@ RUN ldconfig -v
 RUN pip install tensorboard torch torchvision --upgrade
 
 RUN apt-get install -y git
-RUN cd /opt && git clone git://github.com/ultralytics/yolov5
+RUN cd /opt
+COPY yolov5 /opt/yolov5
 RUN pip install -r /opt/yolov5/requirements.txt
-
+RUN apt-get update
 RUN apt-get install ffmpeg libsm6 libxext6 -y
 
 ### Install nginx notebook
-RUN apt-get -y update && apt-get install -y --no-install-recommends \
+RUN apt-get install -y --no-install-recommends \
          wget \
          nginx \
          ca-certificates \
@@ -37,6 +38,8 @@ COPY predict /opt/ml/code
 COPY serve.py /opt/ml/code
 COPY wsgi.py /opt/ml/code
 COPY predictor.py /opt/ml/code
+COPY predictor_local.py /opt/ml/code
 COPY nginx.conf /opt/ml/code
-COPY best.pt /opt/ml/code
-ENTRYPOINT ["python", "serve.py"]
+#直接部署
+# COPY best.pt /opt/ml/code 
+# ENTRYPOINT ["python", "serve.py"] 

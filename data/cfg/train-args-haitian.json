@@ -1,0 +1,9 @@
+{
+   "FP_DATA": "/opt/ml/input/data/cfg/haitian.yaml",
+   "FP_YOLO": "/opt/ml/input/data/cfg/yolov5x6.yaml",    
+   "FP_WEIGHT": "/opt/ml/input/data/weights/yolov5x6.pt",
+   "NAME": "tutorial",
+   "IMG_SIZE": "1600",
+   "EPOCHS": "1",
+   "BATCH": "2"
+}
