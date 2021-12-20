@@ -1,5 +1,5 @@
 #! /bin/bash
-FP_PARA=/opt/ml/input/data/cfg/train-args.json
+FP_PARA=/opt/ml/input/data/cfg/train-args-haitian.json
 data=$(cat $FP_PARA | jq -r '.FP_DATA')
 yolo=$(cat $FP_PARA | jq -r '.FP_YOLO')
 weight=$(cat $FP_PARA | jq -r '.FP_WEIGHT')
