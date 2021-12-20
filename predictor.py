@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 import sys
 import json
 import os
 import warnings
 import flask
 import boto3
+import numpy as np
 import io
 
 from PIL import Image
@@ -21,10 +23,11 @@ import torch.backends.cudnn as cudnn
 
 from models.experimental import attempt_load
 from utils.datasets import LoadStreams, LoadImages
-from utils.general import check_img_size, check_requirements, check_imshow, non_max_suppression, apply_classifier, \
-    scale_coords, xyxy2xywh, strip_optimizer, set_logging, increment_path
-from utils.plots import colors
-from utils.torch_utils import select_device, time_sync
+from utils.general import check_img_size,  non_max_suppression,  \
+    scale_coords, xyxy2xywh,  set_logging,  box_iou
+# from utils.plots import colors, plot_one_box
+from utils.torch_utils import select_device,  time_sync
+
 
 
 # The flask app for serving predictions
@@ -35,10 +38,11 @@ s3_client = boto3.client('s3')
 name = 'tutorial'
 weights = '/opt/ml/model/{}/weights/best.pt'.format(name)
 imgsz = 1600
-conf_thres = 0.02
-iou_thres = 0.45
+conf_thres = 0.2
+iou_thres = 0.1
 max_det = 1000
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+print(device)
 classes = None
 agnostic_nms = False
 augment = False
@@ -70,7 +74,7 @@ def init(weights='yolov5s.pt',  # model.pt path(s)
         ):
     # Initialize
     set_logging()
-    device = select_device(device)
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     half &= device.type != 'cpu'  # half precision only supported on CUDA
 
     # Load model
@@ -90,6 +94,15 @@ def init(weights='yolov5s.pt',  # model.pt path(s)
 
 model, names = init(weights=weights, imgsz=imgsz, conf_thres=conf_thres, iou_thres=iou_thres, max_det=max_det, device=device, classes=classes, agnostic_nms=agnostic_nms, augment=augment, half=half)
 
+def lhr_nms(pred, thres=0.5):
+    iou=box_iou(pred[:,:4],pred[:,:4]).cpu().numpy()
+    conf=pred[:,4].cpu().numpy()
+    res=[]
+    import numpy as np
+    for i in range(iou.shape[0]):
+        idx=np.where(iou[i,:]>=thres)
+        res.append(idx[0][np.argmax(conf[idx[0]])])
+    return pred[list(set(res))]
 
 def detect(source):
     stride = int(model.stride.max())  # model stride
@@ -111,6 +124,7 @@ def detect(source):
         # Apply NMS
         pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
         t2 = time_sync()
+        pred[0] = lhr_nms(pred[0],0.4)
 
         # Process detections
         result = []

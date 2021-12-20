@@ -39,7 +39,7 @@ def start_server():
                                  '-k', 'gevent',
                                  '-b', 'unix:/tmp/gunicorn.sock',
                                  '-w', str(model_server_workers),
-                                 'wsgi:app'])
+                                 'wsgi_loc:app_loc'])
 
     signal.signal(signal.SIGTERM, lambda a, b: sigterm_handler(nginx.pid, gunicorn.pid))
 

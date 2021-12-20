@@ -36,11 +36,11 @@ WORKDIR /opt/ml/code
 COPY train /opt/ml/code
 COPY predict /opt/ml/code
 COPY serve.py /opt/ml/code
+COPY serve /opt/ml/code
 COPY wsgi.py /opt/ml/code
+COPY wsgi_loc.py /opt/ml/code
 COPY predictor.py /opt/ml/code
 COPY predictor_local.py /opt/ml/code
 COPY nginx.conf /opt/ml/code
-COPY serve /opt/ml/code
-#直接部署
-# COPY best.pt /opt/ml/code 
-# ENTRYPOINT ["python", "serve.py"] 
+# COPY ./data/weights/best.pt /opt/ml/code
+# ENTRYPOINT ["python", "serve.py"]
