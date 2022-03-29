@@ -35,10 +35,11 @@ app = flask.Flask(__name__)
 
 s3_client = boto3.client('s3')
 
+print('torch vision:',torch.__version__)
 name = 'tutorial'
-weights = '/opt/ml/model/{}/weights/best.pt'.format(name)
-imgsz = 1600
-conf_thres = 0.2
+weights = '/opt/ml/code/yolov5l6.pt'
+imgsz = 1280
+conf_thres = 0.25
 iou_thres = 0.1
 max_det = 1000
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
